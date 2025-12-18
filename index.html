@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Memory Number Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body{
+            text-align: center;
+            font-family: Arial;
+            background: linear-gradient(to right, #232526, #414345);
+            color: white;
+            padding-top: 80px;
+        }
+
+        h1{
+            font-size: 36px;
+        }
+
+        button{
+            width: 200px;
+            height: 60px;
+            font-size: 22px;
+            cursor: pointer;
+            border-radius: 10px;
+            border: none;
+            margin: 10px;
+        }
+
+        input{
+            width: 200px;
+            height: 50px;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        #number{
+            font-size: 48px;
+            margin: 20px;
+            filter: blur(4px);   /* BLUR EFFECT */
+        }
+
+        .info{
+            font-size: 22px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>🧠 Memory Number Game</h1>
+
+    <button onclick="startGame()" id="startBtn">START GAME</button>
+
+    <div id="number"></div>
+
+    <input type="number" id="userInput" placeholder="Enter number" disabled>
+    <br>
+    <button onclick="checkNumber()" id="checkBtn" disabled>CHECK</button>
+
+    <div class="info" id="result"></div>
+
+    <div class="info">
+        Score: <span id="score">0</span> |
+        Lives: <span id="lives">3</span>
+    </div>
+
+    <script>
+    let randomNumber;
+    let score = 0;
+    let lives = 3;
+
+    function startGame(){
+        score = 0;
+        lives = 3;
+        document.getElementById("score").innerText = score;
+        document.getElementById("lives").innerText = lives;
+        document.getElementById("startBtn").disabled = true;
+        startRound();
+    }
+
+    function startRound(){
+        randomNumber = Math.floor(Math.random() * 900) + 100;
+
+        let numDiv = document.getElementById("number");
+        numDiv.innerText = randomNumber;
+
+        /* 👉 BLUR ONLY THE NUMBER */
+        numDiv.style.filter = "blur(4px)";
+
+        document.getElementById("result").innerText = "";
+        document.getElementById("userInput").value = "";
+        document.getElementById("userInput").disabled = true;
+        document.getElementById("checkBtn").disabled = true;
+
+        setTimeout(() => {
+            /* 👉 REMOVE BLUR BEFORE SHOWING ??? */
+            numDiv.style.filter = "none";
+            numDiv.innerText = "❓❓❓";
+
+            document.getElementById("userInput").disabled = false;
+            document.getElementById("checkBtn").disabled = false;
+        }, 3000);
+    }
+
+    function checkNumber(){
+        let userValue = document.getElementById("userInput").value;
+
+        if(userValue == randomNumber){
+            document.getElementById("result").innerText = "🎉 Correct!";
+            score++;
+        } else {
+            document.getElementById("result").innerText =
+                "❌ Wrong! Number was " + randomNumber;
+            lives--;
+        }
+
+        document.getElementById("score").innerText = score;
+        document.getElementById("lives").innerText = lives;
+
+        document.getElementById("userInput").disabled = true;
+        document.getElementById("checkBtn").disabled = true;
+
+        if(lives > 0){
+            setTimeout(startRound, 2000);
+        } else {
+            document.getElementById("number").innerText = "GAME OVER";
+            document.getElementById("startBtn").disabled = false;
+        }
+    }
+</script>
+
+
+</body>
+</html>
